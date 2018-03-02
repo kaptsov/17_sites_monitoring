@@ -34,7 +34,7 @@ def get_domain_expire_status(url):
             domain_status = 'Warning!'
         else:
             domain_status = 'OK'
-    return (domain_status, time_untill_expire.days)
+    return domain_status, time_untill_expire.days
 
 
 if __name__ == '__main__':
