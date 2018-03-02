@@ -39,6 +39,7 @@ Status is OK domain will expire in 596  days
 **Установка дополнительных пакетов:**
 
 Для корректоной работы скрипта необходимо установить следующие модули:
-* **requests** - для работы с HTTP
+* **requests** - для работы с whoapi.com
+* **http1** - для работы с HTTP
 
 Пакеты устанавливаются по команде `pip install -r requirements.txt`.
