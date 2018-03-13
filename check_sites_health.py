@@ -1,7 +1,11 @@
 import argparse
+import whois
 import http1
-import requests
 import datetime
+
+
+MONTH = 31
+GOOD_SERVER_ANSWER = 200
 
 
 def get_commandline_args():
@@ -16,35 +20,44 @@ def load_urls4check(filepath):
     return filedata
 
 
-def get_server_respond_code(url):
-    return http1.head(url).status
+def is_server_respond_200(url):
+    return http1.head(url).status == GOOD_SERVER_ANSWER
 
 
-def get_domain_expire_status(url):
-    params = {"apikey": 'fe7fa75b11aaf41fa205ba292787fd74',
-              'r': 'whois', 'domain': url}
-    request = requests.get('http://api.whoapi.com', params=params)
-    answer = request.json()
-    if answer["registered"]:
-        expiration_date = datetime.datetime.strptime(
-            answer["date_expires"], '%Y-%m-%d %H:%M:%S')
+def get_domain_expire_date(url):
+    try:
+        json_answer = whois.whois(url)
+        date_answer = json_answer.get('expiration_date', 0)
+        try:
+            return date_answer[0]
+        except TypeError:
+            return date_answer
+    except whois.parser.PywhoisError:
+        print('Cant find', url)
+
+
+def get_domain_status(expiration_date):
+    if (expiration_date is not None):
         now = datetime.datetime.now()
-        time_untill_expire = expiration_date - now
-        if time_untill_expire.days < 30:
-            domain_status = 'Warning!'
-        else:
-            domain_status = 'OK'
-    return domain_status, time_untill_expire.days
+        expiration = expiration_date - now
+        domain_status = expiration.days > MONTH
+    else:
+        expiration = None
+        domain_status = False
+    return expiration, domain_status
 
 
 if __name__ == '__main__':
     try:
         url_list_file = get_commandline_args('filepath')
         url_list = load_urls4check(url_list_file)
-        for url in url_list:
-            print(url, ' responds with status:', get_server_respond_code(url))
-            domain_status, expiration = get_domain_expire_status(url)
-            print('Status is', domain_status,
-                  'domain will expire in', expiration, ' days')
-    except(FileNotFoundError):
-        exit('File not found')
+    except(FileNotFoundError, TypeError):
+        exit('File not found or empty')
+
+    for url in url_list:
+        expiration, domain_status = get_domain_status(
+            get_domain_expire_date(url))
+        if (expiration is not None):
+            print(url, 'responds with status 200:', is_server_respond_200(url))
+            print('Status is OK:', domain_status,
+                  'domain will expire in', expiration.days, 'days.')
