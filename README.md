@@ -6,11 +6,9 @@
 Пример текстового файла:
 
 ```
-https://github.com
 https://devman.org
-https://ru.wikipedia.org
-https://yandex.ru
-https://slack.com
+https://gith45433534b.com
+http://krovatka.ru
 ```
 
 
@@ -21,16 +19,11 @@ python check_sites_health.py urls.txt
 ```
 ответ:
 ```
-https://github.com  responds with status: 200
-Status is OK domain will expire in 952  days
-https://devman.org  responds with status: 200
-Status is OK domain will expire in 178  days
-https://ru.wikipedia.org  responds with status: 200
-Status is OK domain will expire in 1777  days
-https://yandex.ru  responds with status: 200
-Status is OK domain will expire in 212  days
-https://slack.com  responds with status: 200
-Status is OK domain will expire in 596  days
+https://devman.org  responds with status 200: True
+Status is OK: True domain will expire in 167 days.
+Cant find https://gith45433534b.com
+http://krovatka.ru  responds with status 200: True
+Status is OK: True domain will expire in 232 days.
 ```
 
 
