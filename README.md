@@ -34,3 +34,7 @@ Status is OK: True domain will expire in 232 days.
 * **http1** - для работы с HTTP запросом.
 
 Пакеты устанавливаются по команде `pip install -r requirements.txt`.
+
+# Цели проекта
+
+Код создан в учебных целях. В рамках учебного курса по веб-разработке - [DEVMAN.org](https://devman.org)
